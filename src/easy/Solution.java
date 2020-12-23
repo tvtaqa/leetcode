@@ -5,6 +5,57 @@ import java.util.Stack;
 
 import static sun.swing.MenuItemLayoutHelper.max;
 
+
+/**
+ * 155. 最小栈
+ * 由于需要记录当前栈中最小的元素，所以push的时候，将当前值和最小值都push进去
+ * pop的时候，pop两次
+ * 栈顶元素是倒数第二个元素
+ * 栈中最小值就是栈顶的值
+ * */
+class MinStack {
+    Stack<Integer> st =  null;
+    /** initialize your data structure here. */
+    public MinStack() {
+        st = new Stack<>();
+    }
+
+    public void push(int x) {
+        int top; //当前最小值
+        if(!st.empty()){
+            top  = st.peek();
+            if(top < x)
+            {
+                st.push(x);
+                st.push(top);
+            }
+            else {
+                st.push(x);
+                st.push(x);
+            }
+        }
+        else
+        {
+            st.push(x);
+            st.push(x);
+        }
+    }
+
+    public void pop() {
+        st.pop();
+        st.pop();
+    }
+
+    public int top() {
+        return st.get(st.size()-2);
+    }
+
+    public int getMin() {
+        return st.peek();
+
+    }
+}
+
 class Solution {
     /*
     首先遍历一轮，两个两个比较，如果相同，将前面那个数置为MAX_VALUE
@@ -644,6 +695,10 @@ class Solution {
         else
             return true;
     }
+
+
+
+
 
 
     public static void main(String[] args){
