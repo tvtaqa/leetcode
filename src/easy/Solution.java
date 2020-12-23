@@ -481,11 +481,33 @@ class Solution {
     }
 
 
+    /**
+     * 当前字符不为空，后一个字符为空，则认为单词数+1
+     * 如果最后一个字符不是空格，则需要在结束前再加1
+     * */
+    public int countSegments(String s) {
+        if(s.length()==0)return 0;
+        int count=0;
+        for(int i=0;i<s.length()-1;i++)
+        {
+            char cFront = s.charAt(i);
+            char cLater = s.charAt(i+1);
+            if(cFront!=' ' && cLater==' ')
+            {
+                count++;
+            }
+        }
+        if(s.charAt(s.length()-1)!=' ')count++;
+        return count;
+
+    }
+
+
     public static void main(String[] args){
 
         Solution s = new Solution();
         int[] price = {2,7,9,3,1};
-        System.out.println(s.numRollsToTarget(2,5,10));
+        System.out.println(s.countSegments(""));
         //System.out.println();
     }
 }
