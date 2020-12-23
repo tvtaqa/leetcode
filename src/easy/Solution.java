@@ -1,6 +1,7 @@
 package easy;
 
 import java.util.Arrays;
+import java.util.Stack;
 
 import static sun.swing.MenuItemLayoutHelper.max;
 
@@ -482,6 +483,7 @@ class Solution {
 
 
     /**
+     * 434. 字符串中的单词数
      * 当前字符不为空，后一个字符为空，则认为单词数+1
      * 如果最后一个字符不是空格，则需要在结束前再加1
      * */
@@ -502,12 +504,153 @@ class Solution {
 
     }
 
+    /**
+     * 20. 有效的括号
+     *  熟悉一下Java的Stack类
+     * */
+    public boolean isValid(String s) {
+        Stack<String> stack = new Stack<>();
+        for(int i=0;i<s.length();i++)
+        {
+            String str = String.valueOf(s.charAt(i));
+            if(str.equals("(")  || str.equals("{") || str.equals("[") )
+            {
+                stack.push(str);
+            }
+            else if(str.equals(")")){
+                if(stack.empty() || !stack.pop().equals("("))
+                    return false;
+            }
+            else if(str.equals("}")){
+                if(stack.empty() || !stack.pop().equals("{"))
+                    return false;
+            }
+            else if( str.equals("]")){
+                if(stack.empty() || !stack.pop().equals("["))
+                    return false;
+            }
+        }
+        if (stack.empty())
+            return true;
+        else
+            return false;
+    }
+
+
+    /**
+     * 1544. 整理字符串
+     * 思路：
+     * 从前面往后扫一遍，这样替换地不完全，所以外层再套一层循环，扫完一遍再从头开始扫，直到没有替换了，再跳出循环
+     * 注：
+     * 1.Java中 字符串 replace函数返回一个新串，而不是在原有的基础上修改
+     *
+     * */
+    public String makeGood(String s) {
+        String newstr = s;
+        while(true){
+            boolean change = false;
+            for(int i=0;i<newstr.length()-1;i++){
+                char cFront = newstr.charAt(i);
+                char cLater = newstr.charAt(i+1);
+                String sub = newstr.substring(i,i+2);
+                if(Math.abs(cFront-cLater) == 'a' -'A'){
+                    newstr = newstr.replaceFirst(sub,"");
+                    change = true;
+                }
+            }
+            if (!change)
+                break;
+        }
+        return  newstr;
+    }
+
+    /**
+     * 1544. 整理字符串 解法2
+     * 思路：
+     * 使用栈，遍历字符串的时候，如果当前的字符和stack的栈顶元素是大小写关系，则pop，否则push.
+     * 看栈顶的时候，需要判断是否为空
+     * 最后返回结果的时候，一个一个pop。但是这样就逆序了，需要reverse。
+     *
+     * */
+    public String makeGood_2(String s) {
+        Stack<Character> st = new Stack<>();
+        for(int i=0;i<s.length();i++){
+            Character cur = s.charAt(i);
+            if(!st.empty()) {
+                Character stTop = st.peek();
+                if( Math.abs(stTop-cur) == 'a' - 'A') {
+                    st.pop();
+                }
+                else {
+                    st.push(cur);
+                }
+            }
+            else {
+                st.push(cur);
+            }
+        }
+        String re = "";
+        while(!st.empty()){
+            String tmp = Character.toString(st.peek());
+            re = re+tmp;
+            st.pop();
+        }
+        return  new StringBuffer(re).reverse().toString();
+    }
+
+    /**
+     * 844. 比较含退格的字符串
+     * 没啥值得说的。。。
+     * */
+    public boolean backspaceCompare(String S, String T) {
+        Stack<Character> st_1 = new Stack<>();
+        Stack<Character> st_2 = new Stack<>();
+        for(int i=0;i<S.length();i++)
+        {
+            Character cur = S.charAt(i);
+            if(cur == '#' && !st_1.empty()) {
+                st_1.pop();
+            }
+            else if (cur == '#' && st_1.empty()) ;
+            else st_1.push(cur);
+
+
+        }
+
+        for(int i=0;i<T.length();i++)
+        {
+            Character cur = T.charAt(i);
+            if(cur == '#' && !st_2.empty()) {
+                st_2.pop();
+            }
+            else if (cur == '#' && st_2.empty());
+            else st_2.push(cur);
+        }
+
+        //比较两个stack,进入循环的条件，两个stack都是非空
+        while(!st_1.empty() && !st_2.empty())
+        {
+            if(st_1.peek() != st_2.peek())
+                return false;
+            else {
+                st_1.pop();
+                st_2.pop();
+            }
+        }
+
+        //如果有一个非空，说明不等
+        if(!st_1.empty() || !st_2.empty())
+            return false;
+        else
+            return true;
+    }
+
 
     public static void main(String[] args){
 
         Solution s = new Solution();
         int[] price = {2,7,9,3,1};
-        System.out.println(s.countSegments(""));
+        System.out.println(s.backspaceCompare("aaa###a","aaaa###a"));
         //System.out.println();
     }
 }
