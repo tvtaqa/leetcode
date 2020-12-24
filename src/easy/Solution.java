@@ -1,6 +1,7 @@
 package easy;
 
 import java.util.Arrays;
+import java.util.Queue;
 import java.util.Stack;
 
 import static sun.swing.MenuItemLayoutHelper.max;
@@ -55,6 +56,12 @@ class MinStack {
 
     }
 }
+
+
+
+
+
+
 
 class Solution {
     /*
@@ -696,6 +703,130 @@ class Solution {
             return true;
     }
 
+    /**
+     * 496. 下一个更大元素 I
+     * 两层遍历即可
+     * */
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        int[] re = new int[nums1.length];
+        for (int i=0;i<nums1.length;i++)
+        {
+            boolean loc = false;
+            int j;
+            for(j=0;j<nums2.length;j++)
+            {
+                if (!loc && nums2[j]==nums1[i])
+                {
+                    loc = true;
+                    continue;
+                }
+                if (nums2[j] > nums1[i] && loc)
+                {
+                    re[i] = nums2[j];
+                    break;
+                }
+            }
+            if (j>=nums2.length)
+            {
+                re[i] = -1;
+            }
+        }
+        return re;
+    }
+
+    /**
+     *  1047. 删除字符串中的所有相邻重复项
+     *
+     *  和上面的有一题类似 (1544. 整理字符串 解法2）
+     * */
+    public String removeDuplicates(String S) {
+        Stack<Character> st = new Stack<>();
+        for(int i=0;i<S.length();i++){
+            Character cur = S.charAt(i);
+            if(!st.empty()) {
+                Character stTop = st.peek();
+                if( stTop == cur) {
+                    st.pop();
+                }
+                else {
+                    st.push(cur);
+                }
+            }
+            else {
+                st.push(cur);
+            }
+        }
+        String re = "";
+        while(!st.empty()){
+            String tmp = Character.toString(st.peek());
+            re = re+tmp;
+            st.pop();
+        }
+        return  new StringBuffer(re).reverse().toString();
+    }
+
+
+    /**
+     * 682. 棒球比赛
+     * 本地运行没问题，但是leetcode上运行出错
+     *
+     * */
+    public int calPoints(String[] ops) {
+        Stack<String> st = new Stack<>();
+        for (int i=0;i< ops.length;i++)
+        {
+            String str = ops[i];
+            if(str == "C")
+            {
+                st.pop();
+            }
+            else if(str == "D"){
+                String tmp= st.peek();
+                int num = Integer.parseInt(tmp)*2;
+                st.push(String.valueOf(num));
+
+            }
+            else if(str == "+")
+            {
+                String tmp1= st.get(st.size()-1);
+                int front = Integer.parseInt(tmp1);
+                String tmp2= st.get(st.size()-2);
+                int later = Integer.parseInt(tmp2);
+                st.push(String.valueOf(front+later));
+            }
+            else
+            {
+                st.push(str);
+            }
+        }
+        int sum=0;
+        while(!st.empty()){
+            int num = Integer.parseInt(st.peek());
+            sum += num;
+            st.pop();
+        }
+        return sum;
+    }
+
+    /**
+     * 1021. 删除最外层的括号
+     * 只要进到第二层，就是要输出的内容
+     * 所以可以用一个变量来记录当前的层数
+     * */
+    public String removeOuterParentheses(String S) {
+        int count=0;
+        String re="";
+        for(int i=0;i<S.length();i++){
+            Character ch = S.charAt(i);
+            if(ch=='(')count++;
+            if(count>=2)re+=String.valueOf(ch);
+            if(ch==')')count--;
+
+//            if(ch=='(')count++;
+        }
+        return re;
+
+    }
 
 
 
@@ -704,8 +835,9 @@ class Solution {
     public static void main(String[] args){
 
         Solution s = new Solution();
-        int[] price = {2,7,9,3,1};
-        System.out.println(s.backspaceCompare("aaa###a","aaaa###a"));
+        String[] str = {"5","2","C","D","+"};
+        //String str= "abbaca";
+        //System.out.println(s.("/.."));
         //System.out.println();
     }
 }
