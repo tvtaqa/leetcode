@@ -269,7 +269,10 @@ public class Solution {
         return re;
     }
 
-
+    /**
+     * 739. 每日温度
+     * 两重for循环
+     * */
     public int[] dailyTemperatures(int[] T) {
         int[] re = new int[T.length];
         for(int i=0;i<T.length;i++)
