@@ -1,9 +1,6 @@
 package medium;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 class TreeNode {
     int val;
@@ -269,6 +266,7 @@ public class Solution {
         return re;
     }
 
+    
     /**
      * 739. 每日温度
      * 两重for循环
@@ -289,8 +287,112 @@ public class Solution {
         return re;
     }
 
+    /**
+     * 394. 字符串解码
+     * 利用Stack，遇到']'就开始pop，直到遇到'['
+     * 将这中间的字符保存起来并reverse
+     * 再将前面的数字pop，解密得到字符串，再此push到栈中即可
+     * */
+    public String decodeString(String s) {
+        Stack<Character> st = new Stack<>();
+        for(int i=0;i<s.length();i++)
+        {
+            Character ch = s.charAt(i);
+
+            //若遇到]，则出栈 出到上一个[，并且乘上前面的数字，再入栈
+            if(ch == ']')
+            {
+                String substr="";
+                while(st.peek()!='['){
+                    Character tmp = st.peek();
+                    substr+=String.valueOf(tmp);
+                    st.pop();
+                }
+                substr = new StringBuffer(substr).reverse().toString();
+
+                //将[ pop
+                st.pop();
+
+                //获取前面的数字
+                String IntStr="";
+                while(!st.empty() && st.peek()>='0' && st.peek()<='9'){
+                    Character tmp = st.peek();
+                    IntStr += String.valueOf(tmp);
+                    st.pop();
+                }
+                IntStr = new StringBuffer(IntStr).reverse().toString();
+                int number = Integer.parseInt(IntStr);
+
+                //将number*substr push到stack中
+                String newSubStr = "";
+                while(number>0)
+                {
+                    newSubStr = newSubStr + substr;
+                    number--;
+                }
+                for(int k=0;k<newSubStr.length();k++){
+                    st.push(newSubStr.charAt(k));
+                }
+            }
+            else st.push(ch);
+        }
+
+        //输出结果
+        String re = "";
+        for(int i=0;i<st.size();i++){
+            re += String.valueOf(st.get(i));
+        }
+        return re;
+    }
+
+    /**
+     * 503. 下一个更大元素 II
+     * 解法太暴力，要被抓起来了
+     * */
+    public int[] nextGreaterElements(int[] nums) {
+        int[] re = new int[nums.length];
+        for(int i=0;i < nums.length;i++){
+            int count=0;
+            for(int j=i+1;;j++){
+                j = j % nums.length;
+                count++;
+                if(nums[j]>nums[i]){
+                    re[i] = nums[j];
+                    break;
+                }
+                if(count>=nums.length)break;
+            }
+            if(count>=nums.length)re[i]=-1;
+        }
+        return re;
+    }
+
+
+    /**
+     * 503. 下一个更大元素 II
+     * 单调栈解法
+     * */
+    public int[] nextGreaterElements_2(int[] nums) {
+        int[] re = new int[nums.length];
+        Stack<Integer> st = new Stack<>();
+        Arrays.fill(re,-1);
+        for(int i=0;i< 2*nums.length;i++){
+            while(!st.empty() && nums[i% nums.length] > nums[st.peek()])
+            {
+                re[st.pop()] = nums[i% nums.length];
+            }
+            st.push(i% nums.length);
+        }
+        return re;
+    }
+
+
+
+
+
     public static void main(String[] args) {
+        int[] arr ={1,2,1};
         Solution sol = new Solution();
-        System.out.println(sol.removeDuplicateLetters("abacb"));
+        System.out.println(Arrays.toString(sol.nextGreaterElements_2(arr)));
     }
 }
