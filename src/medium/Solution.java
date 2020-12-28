@@ -287,6 +287,21 @@ public class Solution {
         return re;
     }
 
+    public int[] dailyTemperatures_2(int[] temperatures) {
+        int n = temperatures.length;
+        int[] dist = new int[n];
+        Stack<Integer> indexs = new Stack<>();
+        for (int curIndex = 0; curIndex < n; curIndex++) {
+            while (!indexs.isEmpty() && temperatures[curIndex] > temperatures[indexs.peek()]) {
+                int preIndex = indexs.pop();
+                dist[preIndex] = curIndex - preIndex;
+            }
+            indexs.add(curIndex);
+        }
+        return dist;
+    }
+
+
     /**
      * 394. 字符串解码
      * 利用Stack，遇到']'就开始pop，直到遇到'['
@@ -391,8 +406,9 @@ public class Solution {
 
 
     public static void main(String[] args) {
-        int[] arr ={1,2,1};
+        int[] arr ={73, 74, 75, 71, 69, 72, 76, 73};
         Solution sol = new Solution();
-        System.out.println(Arrays.toString(sol.nextGreaterElements_2(arr)));
+        System.out.println(Arrays.toString(sol.dailyTemperatures_2(arr)));
+        //System.out.println(Arrays.toString(sol.nextGreaterElements_2(arr)));
     }
 }

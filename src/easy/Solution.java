@@ -1,8 +1,6 @@
 package easy;
 
-import java.util.Arrays;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 import static sun.swing.MenuItemLayoutHelper.max;
 
@@ -58,7 +56,110 @@ class MinStack {
 }
 
 
+/**
+ * 232. 用栈实现队列
+ * 需要用两个栈来模拟队列
+ * */
+class MyQueue {
+    Stack<Integer> stackin;
+    Stack<Integer> stackout;
 
+    /** Initialize your data structure here. */
+    public MyQueue() {
+    stackin = new Stack<>();
+    stackout = new Stack<>();
+    }
+
+    /** Push element x to the back of queue. */
+    public void push(int x) {
+        stackin.push(x);
+    }
+
+    /** Removes the element from in front of queue and returns that element. */
+    public int pop() {
+        in2out();
+        return stackout.pop();
+
+    }
+
+    /** Get the front element. */
+    public int peek() {
+        in2out();
+        return stackout.peek();
+    }
+
+    public void in2out() {
+        if(stackout.empty()){
+            while(!stackin.empty()){
+                stackout.push(stackin.pop());
+            }
+        }
+
+    }
+
+    /** Returns whether the queue is empty. */
+    public boolean empty() {
+        return stackin.empty() && stackout.empty();
+    }
+}
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue obj = new MyQueue();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.peek();
+ * boolean param_4 = obj.empty();
+ */
+
+/**
+ * 225. 用队列实现栈
+ * 每一次将新的元素插入队列后，将前面的元素全部出队，再入队，这样就能模拟Stack的后进先出
+ * */
+class MyStack {
+    Queue<Integer> queue;
+    /** Initialize your data structure here. */
+    public MyStack() {
+        queue = new LinkedList<>();
+
+    }
+
+    /** Push element x onto stack. */
+    public void push(int x) {
+        queue.offer(x);
+        //将除了刚进队的元素，一一出队，再入队
+        int len = queue.size()-1;
+        while(len-- > 0){
+            queue.add(queue.poll());
+        }
+
+    }
+
+    /** Removes the element on top of the stack and returns that element. */
+    public int pop() {
+            return queue.remove();
+    }
+
+    /** Get the top element. */
+    public int top() {
+            return queue.peek() ;
+    }
+
+    /** Returns whether the stack is empty. */
+    public boolean empty() {
+        return queue.isEmpty();
+
+    }
+}
+
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * MyStack obj = new MyStack();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.top();
+ * boolean param_4 = obj.empty();
+ */
 
 
 
@@ -828,14 +929,73 @@ class Solution {
 
     }
 
+    /**
+     * 1. 两数之和
+     * 题目中描述到 每种输入只会对应一个答案，所以数组中不会有重复的数字
+     * 因此可以用hash表将之前的结果索引起来。等于一次for循环就能找到答案。
+     * 空间换时间
+     *
+     * */
+    public int[] twoSum(int[] nums, int target) {
+        HashMap<Integer,Integer> hm = new HashMap<>();
+        for(int i=0;i<nums.length;i++){
+            if(hm.containsKey(target-nums[i])){
+                return new int[]{hm.get(target-nums[i]),i};
+            }
+            else{
+                hm.put(nums[i],i);
+            }
+        }
+        return null;
+    }
 
+
+    /**
+     * 217. 存在重复元素
+     * 使用HashSet,自动去重
+     * 如果set的大小小于数组的大小，则有重复的元素
+     * */
+    public boolean containsDuplicate(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        for(int i=0;i<nums.length;i++){
+            set.add(nums[i]);
+        }
+        if(set.size()<nums.length)return true;
+        else
+            return  false;
+    }
+
+    /**
+     * 594. 最长和谐子序列
+     * 题目种不要求连续的子序列（离散的即可）
+     * 第一轮for循环 对所有的数字进行计数
+     * 第二轮for循环 遍历hashset中的key
+     * 自身.计数 + 自身+1.计数 和 longest变量做比较
+     *
+     * * */
+    public int findLHS(int[] nums) {
+        int longest = 0;
+        HashMap<Integer,Integer> hm= new HashMap<>();
+        for (int num : nums) {
+            hm.put(num, hm.getOrDefault(num, 0) + 1);
+        }
+        for(int num : hm.keySet()){
+            if(hm.containsKey(num+1)){
+                longest  = max(longest,(hm.get(num)+hm.get(num+1)));
+            }
+        }
+        return longest;
+    }
 
 
 
     public static void main(String[] args){
 
         Solution s = new Solution();
+        int[] num = {1,3,2,2,5,2,3,7};
         String[] str = {"5","2","C","D","+"};
+        //System.out.println(Arrays.toString(s.twoSum(num,13)));
+        System.out.println(s.findLHS(num));
         //String str= "abbaca";
         //System.out.println(s.("/.."));
         //System.out.println();
