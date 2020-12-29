@@ -403,12 +403,45 @@ public class Solution {
 
 
 
+    /**
+     * 647. 回文子串
+     * 中心拓展法：将一个或者两个字符当成回文串的中心字符
+     * 同时向两边扫，逐一地扩展该回文串
+     * 对于奇数和偶数的，分别处理即可
+     * */
+    public int countSubstrings(String s) {
+        int count=0;
+        for(int i=0;i<s.length();i++){
+            //以当前的字符为中心，尝试拓展
+            count += judge(i,i,s);  //回文串长度为奇数
+            count += judge(i,i+1,s); //回文串的长度是偶数
+        }
+        return  count;
+    }
+    private int judge(int i,int j,String s)
+    {
+        int cnt=0;
+        for (int left=i,right=j;left>-1 && right<s.length();){
+            if(s.charAt(left) == s.charAt(right)){
+                left--;
+                right++;
+                cnt++;
+            }
+            else
+                break;
+        }
+        return  cnt;
+    }
+
+
+
 
 
     public static void main(String[] args) {
         int[] arr ={73, 74, 75, 71, 69, 72, 76, 73};
         Solution sol = new Solution();
-        System.out.println(Arrays.toString(sol.dailyTemperatures_2(arr)));
+        System.out.println(sol.countSubstrings("aaa"));
+        //System.out.println(Arrays.toString(sol.dailyTemperatures_2(arr)));
         //System.out.println(Arrays.toString(sol.nextGreaterElements_2(arr)));
     }
 }

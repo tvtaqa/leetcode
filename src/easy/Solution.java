@@ -1,5 +1,8 @@
 package easy;
 
+import sun.util.resources.cldr.zh.CalendarData_zh_Hans_HK;
+
+import javax.naming.InitialContext;
 import java.util.*;
 
 import static sun.swing.MenuItemLayoutHelper.max;
@@ -988,6 +991,97 @@ class Solution {
     }
 
 
+    /**
+     * 242. 有效的字母异位词
+     * 如果字符串的长度不同，返回false
+     * 如果字符串的长度相同，用一个26位的数组来count字母个数
+     * */
+    public boolean isAnagram(String s, String t) {
+        if (s.length()!=t.length())
+            return false;
+        int[] charray_s = new int[26];
+        int[] charray_t = new int[26];
+        for (int i=0;i<s.length();i++){
+            Character ch_s = s.charAt(i);
+            Character ch_t = t.charAt(i);
+            charray_s[ch_s-'a']++;
+            charray_t[ch_t-'a']++;
+        }
+        for(int i=0;i<26;i++){
+            if(charray_s[i]!=charray_t[i])
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * 409. 最长回文串
+     * AAAababCCC 这样的字符串 AACC 还是能用来构成回文串的
+     * 并不是奇数个的字符就不可以
+     * 最后如果longest小于原字符串的长度，就可以再加一个单独的字符
+     *
+     * */
+    public int longestPalindrome(String s) {
+        int longest=0;
+        int[] charray = new int[58];
+        for(Character ch : s.toCharArray()){
+            charray[ch-'A']++;
+        }
+        for(int i=0;i<58;i++){
+            if(charray[i]%2==0)
+                longest+=charray[i];
+            else {
+                longest+=(charray[i]/2)*2;
+            }
+        }
+        if(longest<s.length())
+            longest++;
+        return longest;
+    }
+
+    /**
+     * 205. 同构字符串
+     * 由于字符串的长度是相同的，从前面开始扫一遍
+     * 如果发现当前的字符之前出现过，就看一下之前出现的索引
+     * 另一个字符串的当前字符也应该出现过，且索引相同
+     *
+     * 所以用Hashmap存字符和上一次出现的索引
+     * */
+    public boolean isIsomorphic(String s, String t) {
+        Map<Character,Integer> smap = new HashMap<>();
+        Map<Character,Integer> tmap = new HashMap<>();
+        for(int i=0;i<s.length();i++){
+            Character ch_s = s.charAt(i);
+            Character ch_t = t.charAt(i);
+            //前一个字符串中出现和之前相同的字符
+            if(smap.containsKey(ch_s)){
+                int index_s = smap.get(ch_s);
+                if(!tmap.containsKey(ch_t) || tmap.get(ch_t)!=index_s)
+                    return false;
+            }
+            if(tmap.containsKey(ch_t)){
+                int index_t = tmap.get(ch_t);
+                if(!smap.containsKey(ch_s) || smap.get(ch_s)!=index_t)
+                    return false;
+            }
+            smap.put(ch_s,i);
+            tmap.put(ch_t,i);
+        }
+        return  true;
+    }
+
+    /**
+     * 9. 回文数
+     * */
+    public boolean isPalindrome(int x) {
+        String str = Integer.toString(x);
+        String reverseStr = new StringBuffer(str).reverse().toString();
+        if(reverseStr.equals(str) )
+            return true;
+        else
+            return  false;
+    }
+
 
     public static void main(String[] args){
 
@@ -995,7 +1089,9 @@ class Solution {
         int[] num = {1,3,2,2,5,2,3,7};
         String[] str = {"5","2","C","D","+"};
         //System.out.println(Arrays.toString(s.twoSum(num,13)));
-        System.out.println(s.findLHS(num));
+        String str_1="abccccdd";
+        String str_2="car";
+        System.out.println(s.longestPalindrome(str_1));
         //String str= "abbaca";
         //System.out.println(s.("/.."));
         //System.out.println();
