@@ -434,13 +434,68 @@ public class Solution {
     }
 
 
+    /**
+     * 240. 搜索二维矩阵 II
+     * 从右上角开始search，左边的元素比当前的小，下面的元素比当前的大。所以一层for循环即可
+     * PS：别写成两层for循环
+     * */
+    public boolean searchMatrix(int[][] matrix, int target) {
+        for(int i=0,j=matrix[0].length-1;i<matrix.length && j>=0;){
+            if(target > matrix[i][j]){
+                i++;
+            }
+            else if(target < matrix[i][j]){
+                j--;
+            }
+            else {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * 378. 有序矩阵中第K小的元素
+     * 暴力求解：丢到一个一维数组，再进行排序，取对应索引的元素
+     *
+     * */
+    public int kthSmallest(int[][] matrix, int k) {
+        int[] sort_array = new int[matrix.length * matrix[0].length];
+        int index=0;
+        for(int i=0;i< matrix.length;i++){
+            for(int j=0;j<matrix[0].length;j++){
+                sort_array[index++] = matrix[i][j];
+            }
+        }
+        Arrays.sort(sort_array);
+        return sort_array[k-1];
+
+    }
+
+
+    /**
+     * 287. 寻找重复数
+     */
+    public int findDuplicate(int[] nums) {
+        HashMap<Integer,Integer> hashmap = new HashMap<>();
+        for(int i=0;i<nums.length;i++){
+            hashmap.put(nums[i], hashmap.getOrDefault(nums[i],0)+1 );
+        }
+        for(Integer key : hashmap.keySet()){
+            if(hashmap.get(key)>1){
+                return key;
+            }
+        }
+        return 0;
+    }
 
 
 
     public static void main(String[] args) {
-        int[] arr ={73, 74, 75, 71, 69, 72, 76, 73};
+        int[] arr ={1,1};
         Solution sol = new Solution();
-        System.out.println(sol.countSubstrings("aaa"));
+        //System.out.println(Arrays.toString(sol.findErrorNums(arr)));
         //System.out.println(Arrays.toString(sol.dailyTemperatures_2(arr)));
         //System.out.println(Arrays.toString(sol.nextGreaterElements_2(arr)));
     }

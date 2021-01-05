@@ -1083,15 +1083,107 @@ class Solution {
     }
 
 
+    /**
+     * 283. 移动零
+     *
+     * */
+    public void moveZeroes(int[] nums) {
+        int index = 0;
+        for(int i=0;i<nums.length;i++){
+            if(nums[i]!=0){
+                nums[index++] = nums[i];
+            }
+        }
+        for(int i=nums.length-1;i>=index;i--){
+            nums[i] = 0;
+        }
+    }
+
+
+    /**
+     * 566. 重塑矩阵
+     *
+     * */
+
+    public int[][] matrixReshape(int[][] nums, int r, int c) {
+        if(nums[0].length*nums.length != r*c)
+        {
+            return nums;
+        }
+        else{
+            //System.out.println(nums[0].length);
+            int[][] re = new int[r][c];
+            int old_r,old_c,count;
+            old_r=old_c=count=0;
+            for(int i=0;i<r;i++){
+                for(int j=0;j<c;j++){
+                    re[i][j]=nums[old_r][old_c];
+                    old_c++;
+                    count++;
+                    if(count%nums[0].length==0){
+                        old_r++;
+                        old_c=0;
+                    }
+
+                }
+            }
+            return  re;
+        }
+    }
+
+
+    /**
+     * 485. 最大连续1的个数
+     * */
+    public int findMaxConsecutiveOnes(int[] nums) {
+        int count=0;
+        int maxcount=0;
+        for(int i=0;i<nums.length;i++){
+            if(nums[i]==1){
+                count++;
+                if(count>maxcount) {
+                    maxcount = count;
+                }
+            }
+            else{
+                count=0;
+            }
+        }
+        return maxcount;
+    }
+
+
+
+
+    /**
+     * 645. 错误的集合
+     * */
+//    public int[] findErrorNums(int[] nums) {
+//        Arrays.sort(nums);
+//        int count=1;
+//        for(int i=0;i < nums.length - 1 ;i++){
+//            if(nums[i] == nums[i+1]){
+//                return new int[]{nums[i],count};
+//            }
+//            if(nums[i] == i+1){
+//                count++;
+//            }
+//        }
+//        return new int[]{};
+//    }
+
+
+
     public static void main(String[] args){
 
         Solution s = new Solution();
-        int[] num = {1,3,2,2,5,2,3,7};
+        int[][] nums = {{1,2},{3,4}};
+        int[][] num = {{1,4,7,11,15},{2,5,8,12,19},{3,6,9,16,22},{10,13,14,17,24},{18,21,23,26,30}};
         String[] str = {"5","2","C","D","+"};
         //System.out.println(Arrays.toString(s.twoSum(num,13)));
         String str_1="abccccdd";
         String str_2="car";
-        System.out.println(s.longestPalindrome(str_1));
+        //System.out.println(s.searchMatrix(num,5));
         //String str= "abbaca";
         //System.out.println(s.("/.."));
         //System.out.println();
