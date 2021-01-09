@@ -1157,30 +1157,98 @@ class Solution {
 
     /**
      * 645. 错误的集合
+     * 使用数组桶，专治花里胡哨
      * */
-//    public int[] findErrorNums(int[] nums) {
-//        Arrays.sort(nums);
-//        int count=1;
-//        for(int i=0;i < nums.length - 1 ;i++){
-//            if(nums[i] == nums[i+1]){
-//                return new int[]{nums[i],count};
-//            }
-//            if(nums[i] == i+1){
-//                count++;
-//            }
-//        }
-//        return new int[]{};
-//    }
+    public int[] findErrorNums(int[] nums) {
+        int[] bucket = new int[nums.length+1];
+        int[] re = new int[2];
+        for(int i :nums){
+            bucket[i]++;
+        }
+        for(int i=1;i<nums.length+1;i++){
+           if(bucket[i] == 2)
+               re[0] = i;
+           else if(bucket[i] == 0)
+               re[1] = i;
+        }
+
+        return re;
+    }
+
+    /**
+     * 697. 数组的度
+     * 使用三个hashmap，分别存出现的次数，最后出现的索引，首次出现的索引
+     * */
+    public int findShortestSubArray(int[] nums) {
+        HashMap<Integer,Integer> maxcount = new HashMap<>();
+        HashMap<Integer,Integer> lastIndex = new HashMap<>();
+        HashMap<Integer,Integer> firstIndex = new HashMap<>();
+        for(int i=0;i<nums.length;i++){
+            maxcount.put(nums[i],maxcount.getOrDefault(nums[i],0)+1);
+            lastIndex.put(nums[i],i);
+            if(!firstIndex.containsKey(nums[i])){
+                firstIndex.put(nums[i],i);
+            }
+        }
+
+        //确定度
+        int degree = -1;
+        for(int key : maxcount.keySet()){
+            degree = Math.max(degree,maxcount.get(key));
+        }
+        int re = Integer.MAX_VALUE;
+        for(int key:maxcount.keySet()){
+            if(degree == maxcount.get(key))
+                re = Math.min(re,lastIndex.get(key) - firstIndex.get(key) + 1);
+        }
+        return re;
+
+    }
+
+    /**
+     * 766. 托普利茨矩阵
+     * 首行 第i个元素斜着往下扫
+     * 首列 第i个元素斜着往下扫
+     * */
+    public boolean isToeplitzMatrix(int[][] matrix) {
+        //首行往下扫
+        for(int i=0;i<matrix[0].length;i++){
+            int row,col,tmp;
+            row=0;
+            col=i;
+            tmp=matrix[row][col];
+            while(row < matrix.length && col< matrix[0].length){
+                if(tmp != matrix[row][col])
+                    return false;
+                row++;
+                col++;
+            }
+        }
+
+        //首列往下扫
+        for(int i=1;i<matrix.length;i++){
+            int row,col,tmp;
+            row=i;
+            col=0;
+            tmp=matrix[row][col];
+            while(row < matrix.length && col< matrix[0].length){
+                if(tmp != matrix[row][col])
+                    return false;
+                row++;
+                col++;
+            }
+        }
+        return true;
+    }
 
 
 
     public static void main(String[] args){
 
         Solution s = new Solution();
-        int[][] nums = {{1,2},{3,4}};
-        int[][] num = {{1,4,7,11,15},{2,5,8,12,19},{3,6,9,16,22},{10,13,14,17,24},{18,21,23,26,30}};
+        int[] nums = {1,2,2,3,1,4,2};
         String[] str = {"5","2","C","D","+"};
-        //System.out.println(Arrays.toString(s.twoSum(num,13)));
+        System.out.println(s.findShortestSubArray(nums));
         String str_1="abccccdd";
         String str_2="car";
         //System.out.println(s.searchMatrix(num,5));

@@ -489,12 +489,52 @@ public class Solution {
         }
         return 0;
     }
+    /**
+     * 565. 数组嵌套
+     * 暴力求解时间勉强没超
+     * 为了减少执行时间，需要适当地剪枝。需要标记一下，访问过的节点就没必要再访问了
+     * */
+    public int arrayNesting(int[] nums) {
+        int maxcount=Integer.MIN_VALUE;
+        for (int i=0;i<nums.length;i++)
+        {
+            //int st_num = nums[i]; //起始的节点
+            int count=0;
+            int index=i;
+            //while(index!=-1 && (st_num!=nums[index] || count==0)){
+            while(nums[index]!=-1){
+                int tmp = index;
+                index = nums[index];
+                nums[tmp] = -1;
+                count++;
+            }
+            if (maxcount<count)
+                maxcount = count;
+        }
+        return maxcount;
+    }
+
+
+    /**
+     * 769. 最多能完成排序的块
+     *
+     * */
+    public int maxChunksToSorted(int[] arr) {
+        int re=0;
+        int section_max = Integer.MIN_VALUE;
+        for (int i=0;i<arr.length;i++){
+            section_max = Math.max(section_max,arr[i]);
+            if(section_max == i)re++;
+        }
+        return re;
+    }
 
 
 
     public static void main(String[] args) {
-        int[] arr ={1,1};
+        int[] arr ={5,4,0,3,1,6,2};
         Solution sol = new Solution();
+        System.out.println(sol.arrayNesting(arr));
         //System.out.println(Arrays.toString(sol.findErrorNums(arr)));
         //System.out.println(Arrays.toString(sol.dailyTemperatures_2(arr)));
         //System.out.println(Arrays.toString(sol.nextGreaterElements_2(arr)));
